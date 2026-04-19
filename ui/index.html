@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Everything Claude Code</title>
+  <style>
+    :root {
+      --bg:       #0f1117;
+      --bg-card:  #161b27;
+      --bg-hover: #1e2535;
+      --border:   #2a3347;
+      --accent:   #d97757;
+      --accent2:  #8b5cf6;
+      --text:     #e2e8f0;
+      --muted:    #8892a4;
+      --green:    #34d399;
+      --radius:   12px;
+      --mono:     "SF Mono", "Fira Code", Consolas, monospace;
+      --sans:     -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    /* ── Layout ── */
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+
+    /* ── Nav ── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(15,17,23,.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 56px;
+    }
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 16px;
+      color: var(--text);
+      text-decoration: none;
+    }
+    .nav-logo-mark {
+      width: 28px; height: 28px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      border-radius: 7px;
+      display: grid;
+      place-items: center;
+      font-size: 14px;
+    }
+    .nav-links {
+      display: flex;
+      gap: 4px;
+      list-style: none;
+    }
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 13px;
+      padding: 6px 12px;
+      border-radius: 7px;
+      transition: color .15s, background .15s;
+    }
+    .nav-links a:hover { color: var(--text); background: var(--bg-hover); }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 18px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: opacity .15s, transform .1s;
+      border: none;
+    }
+    .btn:hover { opacity: .85; transform: translateY(-1px); }
+    .btn-primary { background: var(--accent); color: #fff; }
+    .btn-ghost { background: var(--bg-card); color: var(--text); border: 1px solid var(--border); }
+
+    /* ── Hero ── */
+    .hero {
+      padding: 100px 0 80px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 60% 40% at 50% 0%, rgba(217,119,87,.12) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 30% at 80% 60%, rgba(139,92,246,.08) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 14px;
+      background: rgba(217,119,87,.1);
+      border: 1px solid rgba(217,119,87,.25);
+      border-radius: 999px;
+      font-size: 12px;
+      color: var(--accent);
+      margin-bottom: 28px;
+      font-weight: 500;
+    }
+    .hero h1 {
+      font-size: clamp(36px, 6vw, 60px);
+      font-weight: 800;
+      letter-spacing: -1.5px;
+      line-height: 1.1;
+      margin-bottom: 20px;
+    }
+    .hero h1 span {
+      background: linear-gradient(135deg, var(--accent) 20%, var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero-sub {
+      max-width: 540px;
+      margin: 0 auto 40px;
+      color: var(--muted);
+      font-size: 17px;
+      line-height: 1.65;
+    }
+    .hero-actions {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .hero-stats {
+      display: flex;
+      justify-content: center;
+      gap: 48px;
+      margin-top: 72px;
+      flex-wrap: wrap;
+    }
+    .stat { text-align: center; }
+    .stat-value {
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: -1px;
+      color: var(--text);
+    }
+    .stat-label { font-size: 12px; color: var(--muted); margin-top: 2px; text-transform: uppercase; letter-spacing: .06em; }
+
+    /* ── Section ── */
+    section { padding: 80px 0; }
+    .section-label {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 12px;
+    }
+    .section-title {
+      font-size: clamp(24px, 4vw, 36px);
+      font-weight: 800;
+      letter-spacing: -.8px;
+      margin-bottom: 12px;
+    }
+    .section-sub {
+      color: var(--muted);
+      max-width: 500px;
+      margin-bottom: 48px;
+    }
+
+    /* ── Cards ── */
+    .grid-3 { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
+    .grid-4 { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 16px; }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      transition: border-color .15s, transform .15s;
+    }
+    .card:hover { border-color: rgba(217,119,87,.35); transform: translateY(-2px); }
+
+    .card-icon {
+      width: 40px; height: 40px;
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      font-size: 18px;
+      margin-bottom: 14px;
+    }
+    .card-title { font-weight: 700; font-size: 15px; margin-bottom: 6px; }
+    .card-desc { font-size: 13px; color: var(--muted); line-height: 1.55; }
+
+    .tag {
+      display: inline-block;
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 5px;
+      font-weight: 600;
+      margin-top: 10px;
+    }
+    .tag-orange { background: rgba(217,119,87,.15); color: var(--accent); }
+    .tag-purple { background: rgba(139,92,246,.15); color: #a78bfa; }
+    .tag-green  { background: rgba(52,211,153,.12); color: var(--green); }
+    .tag-blue   { background: rgba(96,165,250,.12); color: #60a5fa; }
+
+    /* ── Command list ── */
+    .cmd-list { display: flex; flex-direction: column; gap: 10px; }
+    .cmd-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 18px;
+      transition: border-color .15s;
+    }
+    .cmd-row:hover { border-color: rgba(217,119,87,.35); }
+    .cmd-name {
+      font-family: var(--mono);
+      font-size: 13px;
+      color: var(--accent);
+      font-weight: 600;
+      min-width: 160px;
+    }
+    .cmd-desc { font-size: 13px; color: var(--muted); flex: 1; }
+
+    /* ── Install ── */
+    .install-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .install-tabs {
+      display: flex;
+      border-bottom: 1px solid var(--border);
+    }
+    .install-tab {
+      padding: 12px 20px;
+      font-size: 13px;
+      color: var(--muted);
+      cursor: pointer;
+      border: none;
+      background: none;
+      transition: color .15s;
+      font-family: var(--sans);
+    }
+    .install-tab.active { color: var(--accent); border-bottom: 2px solid var(--accent); }
+    .install-panel { display: none; padding: 20px; }
+    .install-panel.active { display: block; }
+    pre {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      font-family: var(--mono);
+      font-size: 13px;
+      line-height: 1.7;
+      overflow-x: auto;
+      color: var(--text);
+    }
+    .comment { color: var(--muted); }
+    .kw { color: var(--accent2); }
+    .str { color: var(--green); }
+
+    /* ── Feature grid ── */
+    .feature-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    @media (max-width: 640px) { .feature-grid { grid-template-columns: 1fr; } }
+
+    .feature-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+    }
+    .feature-card h3 { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+    .feature-card p { font-size: 13px; color: var(--muted); line-height: 1.6; }
+    .feature-icon { font-size: 24px; margin-bottom: 12px; }
+
+    /* ── Harness badges ── */
+    .harness-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 32px;
+    }
+    .harness-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 500;
+    }
+    .harness-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); }
+
+    /* ── Footer ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 40px 0;
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    footer a { color: var(--muted); text-decoration: none; }
+    footer a:hover { color: var(--text); }
+
+    /* ── Divider ── */
+    .divider { border: none; border-top: 1px solid var(--border); margin: 0; }
+
+    /* ── Responsive ── */
+    @media (max-width: 640px) {
+      .nav-links { display: none; }
+      .hero-stats { gap: 28px; }
+      .grid-3, .grid-4 { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Navigation ── -->
+<nav>
+  <div class="container nav-inner">
+    <a href="#" class="nav-logo">
+      <div class="nav-logo-mark">⚡</div>
+      Everything Claude Code
+    </a>
+    <ul class="nav-links">
+      <li><a href="#agents">Agents</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#commands">Commands</a></li>
+      <li><a href="#hooks">Hooks</a></li>
+      <li><a href="#install">Install</a></li>
+    </ul>
+    <a href="#install" class="btn btn-primary">Get Started</a>
+  </div>
+</nav>
+
+<!-- ── Hero ── -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-badge">✦ Anthropic Hackathon Winner</div>
+    <h1>The complete system for<br /><span>AI agent harnesses</span></h1>
+    <p class="hero-sub">
+      Production-ready agents, skills, hooks, and rules evolved over 10+ months
+      of intensive daily use. Works across Claude Code, Cursor, Codex, and more.
+    </p>
+    <div class="hero-actions">
+      <a href="#install" class="btn btn-primary">⚡ Install Now</a>
+      <a href="https://github.com/affaan-m/everything-claude-code" class="btn btn-ghost">
+        ★ GitHub
+      </a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat">
+        <div class="stat-value">140K+</div>
+        <div class="stat-label">Stars</div>
+      </div>
+      <div class="stat">
+        <div class="stat-value">38</div>
+        <div class="stat-label">Agents</div>
+      </div>
+      <div class="stat">
+        <div class="stat-value">156</div>
+        <div class="stat-label">Skills</div>
+      </div>
+      <div class="stat">
+        <div class="stat-value">12+</div>
+        <div class="stat-label">Languages</div>
+      </div>
+      <div class="stat">
+        <div class="stat-value">997+</div>
+        <div class="stat-label">Tests</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider" />
+
+<!-- ── Agents ── -->
+<section id="agents">
+  <div class="container">
+    <span class="section-label">Agents</span>
+    <h2 class="section-title">38 specialized subagents</h2>
+    <p class="section-sub">Delegate complex tasks to purpose-built experts. Each agent carries domain-specific knowledge and tools.</p>
+
+    <div class="grid-3">
+      <div class="card">
+        <div class="card-icon" style="background:rgba(217,119,87,.12)">🧠</div>
+        <div class="card-title">planner</div>
+        <div class="card-desc">Breaks features into actionable, dependency-ordered implementation steps before touching code.</div>
+        <span class="tag tag-orange">general</span>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:rgba(139,92,246,.12)">🔬</div>
+        <div class="card-title">tdd-guide</div>
+        <div class="card-desc">Drives red-green-refactor cycles. Writes tests first, guides implementation to pass them.</div>
+        <span class="tag tag-purple">testing</span>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:rgba(52,211,153,.12)">🛡️</div>
+        <div class="card-title">security-reviewer</div>
+        <div class="card-desc">Audits code for OWASP top 10, supply-chain risks, secrets in git, and injection vectors.</div>
+        <span class="tag tag-green">security</span>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:rgba(96,165,250,.12)">🏗️</div>
+        <div class="card-title">architect</div>
+        <div class="card-desc">Designs system architecture, evaluates trade-offs, and documents decisions at the right altitude.</div>
+        <span class="tag tag-blue">design</span>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:rgba(217,119,87,.12)">🔍</div>
+        <div class="card-title">code-reviewer</div>
+        <div class="card-desc">Reviews diffs with language-specific depth. Catches bugs, style issues, and performance regressions.</div>
+        <span class="tag tag-orange">quality</span>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:rgba(139,92,246,.12)">♻️</div>
+        <div class="card-title">refactor-cleaner</div>
+        <div class="card-desc">Reduces duplication, improves naming, and extracts abstractions without changing behavior.</div>
+        <span class="tag tag-purple">refactor</span>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:rgba(52,211,153,.12)">🚀</div>
+        <div class="card-title">performance-optimizer</div>
+        <div class="card-desc">Profiles hot paths, rewrites bottlenecks, and adds caching strategies with benchmarks.</div>
+        <span class="tag tag-green">perf</span>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:rgba(96,165,250,.12)">🗄️</div>
+        <div class="card-title">database-reviewer</div>
+        <div class="card-desc">Reviews schema design, migration safety, query plans, and index strategies.</div>
+        <span class="tag tag-blue">database</span>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:rgba(217,119,87,.12)">📚</div>
+        <div class="card-title">docs-lookup</div>
+        <div class="card-desc">Researches library docs and API references via Context7 before answering implementation questions.</div>
+        <span class="tag tag-orange">research</span>
+      </div>
+    </div>
+
+    <p style="margin-top:20px; font-size:13px; color:var(--muted)">
+      + 29 more: language-specific reviewers (TypeScript, Python, Go, Java, Kotlin, Rust…),
+      build resolvers, E2E runners, GAN specialists, open-source packagers, and more.
+    </p>
+  </div>
+</section>
+
+<hr class="divider" />
+
+<!-- ── Skills ── -->
+<section id="skills">
+  <div class="container">
+    <span class="section-label">Skills</span>
+    <h2 class="section-title">156 workflow definitions</h2>
+    <p class="section-sub">Deep domain knowledge packaged as reusable skills. Claude loads them on demand.</p>
+
+    <div class="grid-4">
+      <div class="card">
+        <div class="card-icon" style="background:rgba(217,119,87,.12)">⌨️</div>
+        <div class="card-title">Coding Standards</div>
+        <div class="card-desc">TypeScript, Python, Go, Java, Kotlin, Rust, C++, Swift, PHP, Perl patterns.</div>
+        <span class="tag tag-orange">12 skills</span>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:rgba(139,92,246,.12)">🔩</div>
+        <div class="card-title">Frameworks</div>
+        <div class="card-desc">Django, Laravel, Spring Boot, NestJS, FastAPI, Next.js deep-dive skills.</div>
+        <span class="tag tag-purple">18 skills</span>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:rgba(52,211,153,.12)">🧪</div>
+        <div class="card-title">Testing</div>
+        <div class="card-desc">TDD workflows, E2E generation, verification loops, eval harnesses.</div>
+        <span class="tag tag-green">9 skills</span>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:rgba(96,165,250,.12)">🚢</div>
+        <div class="card-title">Deployment</div>
+        <div class="card-desc">Docker, Kubernetes, Vercel, Railway, database migrations, CI/CD.</div>
+        <span class="tag tag-blue">11 skills</span>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:rgba(217,119,87,.12)">🧬</div>
+        <div class="card-title">Continuous Learning</div>
+        <div class="card-desc">Instinct-based self-improvement, autonomous loops, pattern extraction.</div>
+        <span class="tag tag-orange">7 skills</span>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:rgba(139,92,246,.12)">✍️</div>
+        <div class="card-title">Content</div>
+        <div class="card-desc">Article writing, brand voice, investor materials, market research.</div>
+        <span class="tag tag-purple">14 skills</span>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:rgba(52,211,153,.12)">🎬</div>
+        <div class="card-title">Video</div>
+        <div class="card-desc">Manim animations, Remotion video creation, frontend slides builder.</div>
+        <span class="tag tag-green">5 skills</span>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:rgba(96,165,250,.12)">🔐</div>
+        <div class="card-title">Security</div>
+        <div class="card-desc">AgentShield integration — 1282 tests, 102 static rules, supply-chain scanning.</div>
+        <span class="tag tag-blue">8 skills</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider" />
+
+<!-- ── Commands ── -->
+<section id="commands">
+  <div class="container">
+    <span class="section-label">Commands</span>
+    <h2 class="section-title">Slash commands at your fingertips</h2>
+    <p class="section-sub">Type a command in Claude Code to trigger the right workflow instantly.</p>
+
+    <div class="cmd-list">
+      <div class="cmd-row">
+        <span class="cmd-name">/tdd</span>
+        <span class="cmd-desc">Launch the test-driven development loop — write failing tests, implement, refactor.</span>
+        <span class="tag tag-green">testing</span>
+      </div>
+      <div class="cmd-row">
+        <span class="cmd-name">/plan</span>
+        <span class="cmd-desc">Generate a dependency-ordered implementation plan before writing any code.</span>
+        <span class="tag tag-orange">planning</span>
+      </div>
+      <div class="cmd-row">
+        <span class="cmd-name">/code-review</span>
+        <span class="cmd-desc">Run a thorough quality and security review against the current diff.</span>
+        <span class="tag tag-purple">quality</span>
+      </div>
+      <div class="cmd-row">
+        <span class="cmd-name">/e2e</span>
+        <span class="cmd-desc">Generate and run end-to-end tests via Playwright for the feature in scope.</span>
+        <span class="tag tag-blue">testing</span>
+      </div>
+      <div class="cmd-row">
+        <span class="cmd-name">/build-fix</span>
+        <span class="cmd-desc">Diagnose and repair CI/build failures with language-specific build resolvers.</span>
+        <span class="tag tag-orange">ops</span>
+      </div>
+      <div class="cmd-row">
+        <span class="cmd-name">/skill-create</span>
+        <span class="cmd-desc">Auto-generate a skill from git history and commit patterns in this repo.</span>
+        <span class="tag tag-green">meta</span>
+      </div>
+      <div class="cmd-row">
+        <span class="cmd-name">/instinct-status</span>
+        <span class="cmd-desc">Show the current state of the continuous-learning instinct system.</span>
+        <span class="tag tag-purple">learning</span>
+      </div>
+      <div class="cmd-row">
+        <span class="cmd-name">/sessions</span>
+        <span class="cmd-desc">List and resume previous Claude Code sessions with persisted context.</span>
+        <span class="tag tag-blue">sessions</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider" />
+
+<!-- ── Hooks ── -->
+<section id="hooks">
+  <div class="container">
+    <span class="section-label">Hooks</span>
+    <h2 class="section-title">Smart automation on every event</h2>
+    <p class="section-sub">Hooks run automatically in response to Claude Code lifecycle events — no manual triggers needed.</p>
+
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="feature-icon">🚀</div>
+        <h3>SessionStart</h3>
+        <p>Loads persisted context, injects memory, detects package manager, and primes Claude with project conventions on every session start.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">💾</div>
+        <h3>SessionEnd</h3>
+        <p>Persists key decisions, learned patterns, and session state so Claude picks up exactly where you left off.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🔒</div>
+        <h3>PreToolUse — Secret Detection</h3>
+        <p>Scans outgoing tool calls for leaked secrets, API keys, and credentials before they leave your machine.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">✨</div>
+        <h3>PostEdit — Auto-Format</h3>
+        <p>Runs the right formatter and linter for each edited file automatically after every save. Configurable via <code>ECC_HOOK_PROFILE</code>.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">⚡</div>
+        <h3>PostToolUse — Typecheck</h3>
+        <p>Triggers incremental type-checking after edits to TypeScript files, catching errors inline without a manual build step.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🗜️</div>
+        <h3>Strategic Compaction</h3>
+        <p>Monitors context usage and triggers smart context compaction before hitting limits, preserving the most relevant information.</p>
+      </div>
+    </div>
+
+    <div style="margin-top: 32px;">
+      <p style="font-size:13px; color:var(--muted); margin-bottom:12px">Hook strictness profiles</p>
+      <div style="display:flex; gap:10px; flex-wrap:wrap">
+        <span class="tag tag-green">minimal — essentials only</span>
+        <span class="tag tag-orange">standard — recommended</span>
+        <span class="tag tag-purple">strict — all hooks active</span>
+      </div>
+      <p style="font-size:12px; color:var(--muted); margin-top:12px">
+        Set <code style="font-family:var(--mono); font-size:12px; color:var(--accent)">ECC_HOOK_PROFILE=minimal</code> or disable individual hooks via <code style="font-family:var(--mono); font-size:12px; color:var(--accent)">ECC_DISABLED_HOOKS</code>.
+      </p>
+    </div>
+  </div>
+</section>
+
+<hr class="divider" />
+
+<!-- ── Harnesses ── -->
+<section>
+  <div class="container">
+    <span class="section-label">Cross-Harness</span>
+    <h2 class="section-title">Works everywhere you code with AI</h2>
+    <p class="section-sub">ECC isn't locked to Claude Code. Drop it into any AI agent harness and get full coverage.</p>
+
+    <div class="harness-row">
+      <div class="harness-badge"><div class="harness-dot"></div>Claude Code</div>
+      <div class="harness-badge"><div class="harness-dot"></div>Cursor IDE</div>
+      <div class="harness-badge"><div class="harness-dot"></div>OpenAI Codex</div>
+      <div class="harness-badge"><div class="harness-dot"></div>OpenCode</div>
+      <div class="harness-badge"><div class="harness-dot"></div>Gemini CLI</div>
+      <div class="harness-badge"><div class="harness-dot"></div>Antigravity</div>
+      <div class="harness-badge"><div class="harness-dot"></div>Kiro</div>
+      <div class="harness-badge"><div class="harness-dot"></div>Trae</div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider" />
+
+<!-- ── Install ── -->
+<section id="install">
+  <div class="container">
+    <span class="section-label">Install</span>
+    <h2 class="section-title">Up and running in seconds</h2>
+    <p class="section-sub">Choose your preferred install method. Full profile gives you everything; minimal is a clean starting point.</p>
+
+    <div class="install-box">
+      <div class="install-tabs">
+        <button class="install-tab active" onclick="showTab('shell')">Shell</button>
+        <button class="install-tab" onclick="showTab('npm')">npm</button>
+        <button class="install-tab" onclick="showTab('git')">git clone</button>
+      </div>
+
+      <div class="install-panel active" id="tab-shell">
+        <pre><span class="comment"># macOS / Linux — full profile (recommended)</span>
+curl -sSL https://raw.githubusercontent.com/affaan-m/everything-claude-code/main/install.sh | bash -s -- --profile full
+
+<span class="comment"># Windows (PowerShell)</span>
+irm https://raw.githubusercontent.com/affaan-m/everything-claude-code/main/install.ps1 | iex</pre>
+      </div>
+
+      <div class="install-panel" id="tab-npm">
+        <pre><span class="comment"># Install globally via npm</span>
+npm install -g ecc-universal
+
+<span class="comment"># Or with TypeScript support</span>
+npm install ecc-universal
+npx ecc typescript</pre>
+      </div>
+
+      <div class="install-panel" id="tab-git">
+        <pre><span class="comment"># Clone and run the apply script</span>
+git clone https://github.com/affaan-m/everything-claude-code.git
+cd everything-claude-code
+
+<span class="comment"># Apply with your chosen profile: minimal | standard | full</span>
+node scripts/install-apply.js --profile full</pre>
+      </div>
+    </div>
+
+    <div style="margin-top: 32px; display:flex; gap:16px; flex-wrap:wrap">
+      <div class="card" style="flex:1; min-width:220px">
+        <div class="card-title" style="margin-bottom:8px">minimal</div>
+        <div class="card-desc">Core hooks + essential rules. Zero noise, maximum signal.</div>
+        <span class="tag tag-green">lightweight</span>
+      </div>
+      <div class="card" style="flex:1; min-width:220px; border-color:rgba(217,119,87,.35)">
+        <div class="card-title" style="margin-bottom:8px">standard ✦</div>
+        <div class="card-desc">All agents, skills, commands + hooks. Recommended for most projects.</div>
+        <span class="tag tag-orange">recommended</span>
+      </div>
+      <div class="card" style="flex:1; min-width:220px">
+        <div class="card-title" style="margin-bottom:8px">full</div>
+        <div class="card-desc">Everything — MCP configs, AgentShield, ECC 2.0 alpha, all language rules.</div>
+        <span class="tag tag-purple">complete</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Footer ── -->
+<footer>
+  <div class="container">
+    <p style="margin-bottom:8px">
+      Built with ♥ by the ECC community ·
+      <a href="https://github.com/affaan-m/everything-claude-code">GitHub</a> ·
+      <a href="https://github.com/affaan-m/everything-claude-code/blob/main/LICENSE">MIT License</a>
+    </p>
+    <p style="color:#4a5568">140K+ stars · 21K+ forks · 170+ contributors · v1.10.0</p>
+  </div>
+</footer>
+
+<script>
+  function showTab(name) {
+    document.querySelectorAll('.install-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.install-tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('tab-' + name).classList.add('active');
+    event.target.classList.add('active');
+  }
+</script>
+
+</body>
+</html>
