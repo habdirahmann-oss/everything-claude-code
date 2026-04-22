@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080" width="1080" height="1080">
+  <rect width="1080" height="1080" fill="#000000"/>
+  <g fill="none" stroke="#FFFFFF" stroke-width="18" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Wrench icon -->
+    <path d="M660 360
+             a90 90 0 1 0 -120 120
+             L 380 640
+             a50 50 0 0 0 70 70
+             L 620 540
+             a90 90 0 0 0 120 -120
+             L 680 480
+             L 600 400
+             Z"
+          transform="translate(20,0)"/>
+  </g>
+  <text x="540" y="870" font-family="Helvetica, Arial, sans-serif" font-size="110" font-weight="300" fill="#FFFFFF" text-anchor="middle" letter-spacing="8">REPARATIE</text>
+</svg>

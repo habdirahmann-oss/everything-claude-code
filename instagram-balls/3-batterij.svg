@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080" width="1080" height="1080">
+  <rect width="1080" height="1080" fill="#000000"/>
+  <g fill="none" stroke="#FFFFFF" stroke-width="18" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Battery body -->
+    <rect x="300" y="330" width="460" height="260" rx="30" ry="30"/>
+    <!-- Battery terminal -->
+    <rect x="760" y="400" width="30" height="120" rx="10" ry="10" fill="#FFFFFF"/>
+    <!-- Lightning bolt inside -->
+    <polygon points="530,360 420,490 510,490 480,560 610,420 520,420" fill="#FFFFFF" stroke="none"/>
+  </g>
+  <text x="540" y="870" font-family="Helvetica, Arial, sans-serif" font-size="110" font-weight="300" fill="#FFFFFF" text-anchor="middle" letter-spacing="8">BATTERIJ</text>
+</svg>
