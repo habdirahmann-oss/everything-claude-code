@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080" width="1080" height="1080">
+  <rect width="1080" height="1080" fill="#000000"/>
+  <g fill="none" stroke="#FFFFFF" stroke-width="26" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Open hand, palm up -->
+    <path d="M290 740
+             c 0 55 45 100 100 100
+             h 300
+             c 55 0 100 -45 100 -100"/>
+    <line x1="290" y1="740" x2="290" y2="660"/>
+    <line x1="790" y1="740" x2="790" y2="660"/>
+    <!-- Gear above hand -->
+    <circle cx="540" cy="420" r="110"/>
+    <circle cx="540" cy="420" r="38"/>
+    <g>
+      <line x1="540" y1="260" x2="540" y2="310"/>
+      <line x1="540" y1="530" x2="540" y2="580"/>
+      <line x1="380" y1="420" x2="430" y2="420"/>
+      <line x1="650" y1="420" x2="700" y2="420"/>
+      <line x1="427" y1="307" x2="462" y2="342"/>
+      <line x1="618" y1="498" x2="653" y2="533"/>
+      <line x1="653" y1="307" x2="618" y2="342"/>
+      <line x1="462" y1="498" x2="427" y2="533"/>
+    </g>
+  </g>
+</svg>

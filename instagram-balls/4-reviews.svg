@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080" width="1080" height="1080">
+  <rect width="1080" height="1080" fill="#000000"/>
+  <!-- 5 filled stars in a row, center -->
+  <g fill="#FFFFFF" stroke="#FFFFFF" stroke-width="8" stroke-linejoin="round">
+    <polygon points="215,620 248,687 322,697 268,748 281,822 215,787 149,822 162,748 108,697 182,687"/>
+    <polygon points="377,620 410,687 484,697 430,748 443,822 377,787 311,822 324,748 270,697 344,687"/>
+    <polygon points="540,620 573,687 647,697 593,748 606,822 540,787 474,822 487,748 433,697 507,687"/>
+    <polygon points="703,620 736,687 810,697 756,748 769,822 703,787 637,822 650,748 596,697 670,687"/>
+    <polygon points="865,620 898,687 972,697 918,748 931,822 865,787 799,822 812,748 758,697 832,687"/>
+  </g>
+  <!-- Speech bubble with heart above stars -->
+  <g fill="none" stroke="#FFFFFF" stroke-width="26" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M300 260
+             h 480
+             a 50 50 0 0 1 50 50
+             v 200
+             a 50 50 0 0 1 -50 50
+             h -180
+             l -60 60
+             l -60 -60
+             h -180
+             a 50 50 0 0 1 -50 -50
+             v -200
+             a 50 50 0 0 1 50 -50 Z"/>
+    <path d="M540 360
+             c -28 -52 -110 -38 -110 20
+             c 0 52 62 92 110 128
+             c 48 -36 110 -76 110 -128
+             c 0 -58 -82 -72 -110 -20 Z"
+          fill="#FFFFFF"/>
+  </g>
+</svg>

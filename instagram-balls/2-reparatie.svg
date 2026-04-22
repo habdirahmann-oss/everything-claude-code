@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080" width="1080" height="1080">
+  <rect width="1080" height="1080" fill="#000000"/>
+  <g fill="none" stroke="#FFFFFF" stroke-width="26" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Crossed wrench + screwdriver -->
+    <!-- Wrench (diagonal top-right to bottom-left) -->
+    <path d="M770 310
+             a 110 110 0 0 0 -150 150
+             L 340 740
+             a 45 45 0 0 0 64 64
+             L 684 524
+             a 110 110 0 0 0 150 -150
+             L 770 438
+             L 706 374
+             Z"/>
+    <!-- Screwdriver (diagonal top-left to bottom-right) -->
+    <path d="M310 310
+             L 380 310
+             L 560 490
+             L 510 540
+             L 330 360 Z"/>
+    <line x1="560" y1="490" x2="720" y2="650"/>
+    <line x1="680" y1="610" x2="740" y2="670"/>
+  </g>
+</svg>
