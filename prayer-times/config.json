@@ -10,7 +10,7 @@
   "asr": "Standard",
   "highLats": "AngleBased",
   "prayers": ["fajr", "dhuhr", "asr", "maghrib", "isha"],
-  "includeSunrise": false,
+  "includeSunrise": true,
   "horizonDays": 365,
   "eventDurationMinutes": 25,
   "reminderMinutes": 10,

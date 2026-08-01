@@ -11,7 +11,7 @@ const { todayInZone, addDays, formatICSDateUTC, dateTag } = require('./dates');
 
 const PRAYER_LABELS = {
   fajr: 'Fajr',
-  sunrise: 'Sunrise',
+  sunrise: 'Shurooq',
   dhuhr: 'Dhuhr',
   asr: 'Asr',
   maghrib: 'Maghrib',
