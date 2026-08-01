@@ -1,0 +1,22 @@
+{
+  "location": {
+    "name": "Amsterdam",
+    "latitude": 52.3676,
+    "longitude": 4.9041,
+    "elevation": 0
+  },
+  "timezone": "Europe/Amsterdam",
+  "method": "MWL",
+  "asr": "Standard",
+  "highLats": "AngleBased",
+  "prayers": ["fajr", "dhuhr", "asr", "maghrib", "isha"],
+  "includeSunrise": false,
+  "horizonDays": 365,
+  "eventDurationMinutes": 25,
+  "reminderMinutes": 10,
+  "refreshHours": 12,
+  "emoji": true,
+  "calendarName": "Prayer Times — Amsterdam",
+  "dhuhrMinutes": 0,
+  "tune": { "fajr": 0, "dhuhr": 0, "asr": 0, "maghrib": 0, "isha": 0 }
+}

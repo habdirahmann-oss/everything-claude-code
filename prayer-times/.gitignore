@@ -1,0 +1,3 @@
+# Personal config and generated calendars (do not commit)
+config.json
+*.ics
