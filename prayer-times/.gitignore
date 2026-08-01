@@ -1,3 +1,5 @@
-# Personal config and generated calendars (do not commit)
-config.json
+# Generated calendars (the GitHub Action builds these fresh on each run)
 *.ics
+
+# Optional personal override, kept out of git
+config.local.json

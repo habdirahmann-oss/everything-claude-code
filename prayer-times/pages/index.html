@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Gebedstijden — agenda-abonnement</title>
+<style>
+  :root {
+    --bg: #f6f7f9;
+    --card: #ffffff;
+    --text: #1a1c1e;
+    --muted: #5b6470;
+    --accent: #1f7a5a;
+    --accent-text: #ffffff;
+    --border: #e2e6ea;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #14171a;
+      --card: #1e2226;
+      --text: #eef1f4;
+      --muted: #9aa4af;
+      --accent: #35c58f;
+      --accent-text: #06231a;
+      --border: #2c333a;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.55;
+    padding: 2rem 1rem 4rem;
+  }
+  main { max-width: 640px; margin: 0 auto; }
+  h1 { font-size: 1.6rem; margin: 0 0 0.25rem; }
+  .sub { color: var(--muted); margin: 0 0 1.75rem; }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.25rem 1.4rem;
+    margin-bottom: 1.25rem;
+  }
+  .btn {
+    display: inline-block;
+    background: var(--accent);
+    color: var(--accent-text);
+    text-decoration: none;
+    font-weight: 600;
+    padding: 0.8rem 1.4rem;
+    border-radius: 10px;
+    margin: 0.25rem 0.5rem 0.25rem 0;
+  }
+  .btn.secondary {
+    background: transparent;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+  }
+  code {
+    background: rgba(127,127,127,0.14);
+    padding: 0.1rem 0.4rem;
+    border-radius: 5px;
+    font-size: 0.9em;
+    word-break: break-all;
+  }
+  table { width: 100%; border-collapse: collapse; margin-top: 0.25rem; }
+  td { padding: 0.4rem 0; border-bottom: 1px solid var(--border); }
+  td:last-child { text-align: right; font-variant-numeric: tabular-nums; font-weight: 600; }
+  tr:last-child td { border-bottom: none; }
+  ol { padding-left: 1.2rem; }
+  li { margin: 0.35rem 0; }
+  h2 { font-size: 1.05rem; margin: 0 0 0.6rem; }
+  .muted { color: var(--muted); font-size: 0.9rem; }
+</style>
+</head>
+<body>
+<main>
+  <h1>🕌 Gebedstijden</h1>
+  <p class="sub" id="place">Abonneer je agenda één keer — hij werkt daarna vanzelf bij.</p>
+
+  <div class="card">
+    <a class="btn" id="subscribe" href="#">Abonneren in Agenda</a>
+    <a class="btn secondary" id="download" href="prayer-times.ics" download>.ics downloaden</a>
+    <p class="muted" style="margin-bottom:0">Feed-URL: <code id="feedurl">prayer-times.ics</code></p>
+  </div>
+
+  <div class="card" id="today-card" hidden>
+    <h2>Vandaag</h2>
+    <table id="today"></table>
+  </div>
+
+  <div class="card">
+    <h2>Op je Apple-apparaten</h2>
+    <ol>
+      <li><b>iPhone / iPad:</b> Instellingen → Agenda → Accounts → Account toevoegen → Anders → Geabonneerde agenda toevoegen → plak de feed-URL.</li>
+      <li><b>Mac:</b> Agenda openen → Archief → Nieuw agenda-abonnement → plak de feed-URL.</li>
+      <li>Via je iCloud-account verschijnt de agenda automatisch op al je apparaten.</li>
+    </ol>
+    <p class="muted">De knop “Abonneren” gebruikt <code>webcal://</code>, wat Apple Agenda direct opent.</p>
+  </div>
+</main>
+
+<script>
+  (function () {
+    // Derive the feed URL from this page's own location so the links work on
+    // whatever host/path GitHub Pages serves this from.
+    var dir = location.pathname.replace(/[^/]*$/, ''); // strip filename, keep the directory
+    var httpsUrl = location.origin + dir + 'prayer-times.ics';
+    var webcalUrl = httpsUrl.replace(/^https?:/, 'webcal:');
+
+    document.getElementById('subscribe').href = webcalUrl;
+    document.getElementById('download').href = httpsUrl;
+    document.getElementById('feedurl').textContent = httpsUrl;
+
+    // Best-effort: show today's five times parsed straight from the feed.
+    fetch(httpsUrl)
+      .then(function (r) { return r.ok ? r.text() : Promise.reject(); })
+      .then(function (ics) { renderToday(ics); })
+      .catch(function () { /* leave the section hidden */ });
+
+    function renderToday(ics) {
+      var unfolded = ics.replace(/\r\n[ \t]/g, '');
+      var lines = unfolded.split(/\r?\n/);
+      var events = [];
+      var cur = null;
+      for (var i = 0; i < lines.length; i++) {
+        var line = lines[i];
+        if (line === 'BEGIN:VEVENT') cur = {};
+        else if (line === 'END:VEVENT') { if (cur) events.push(cur); cur = null; }
+        else if (cur) {
+          var m = /^([A-Z-]+)(?:;[^:]*)?:(.*)$/.exec(line);
+          if (m) cur[m[1]] = m[2];
+        }
+      }
+      var now = new Date();
+      var y = now.getFullYear();
+      var mo = String(now.getMonth() + 1).padStart(2, '0');
+      var d = String(now.getDate()).padStart(2, '0');
+      var todayKey = '' + y + mo + d;
+      var fmt = new Intl.DateTimeFormat('nl-NL', { hour: '2-digit', minute: '2-digit', hour12: false });
+
+      var rows = [];
+      for (var j = 0; j < events.length; j++) {
+        var start = events[j].DTSTART || '';
+        var dt = parseIcsUtc(start);
+        if (!dt) continue;
+        // Match the event to today in the viewer's local timezone.
+        var localKey = '' + dt.getFullYear() + String(dt.getMonth() + 1).padStart(2, '0') + String(dt.getDate()).padStart(2, '0');
+        if (localKey !== todayKey) continue;
+        var name = (events[j].SUMMARY || '').replace(/^[^A-Za-z]+/, '');
+        rows.push('<tr><td>' + escapeHtml(name) + '</td><td>' + fmt.format(dt) + '</td></tr>');
+      }
+      if (rows.length) {
+        document.getElementById('today').innerHTML = rows.join('');
+        document.getElementById('today-card').hidden = false;
+      }
+    }
+
+    function parseIcsUtc(v) {
+      var m = /^(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})Z$/.exec(v);
+      if (!m) return null;
+      return new Date(Date.UTC(+m[1], +m[2] - 1, +m[3], +m[4], +m[5], +m[6]));
+    }
+
+    function escapeHtml(s) {
+      return s.replace(/[&<>]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]; });
+    }
+  })();
+</script>
+</body>
+</html>

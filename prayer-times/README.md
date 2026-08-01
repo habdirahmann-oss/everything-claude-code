@@ -24,10 +24,11 @@ single fixed event can't track that. This tool solves it two ways:
 
 ## Quick start
 
+`prayer-times/config.json` is already filled in for **Vlaardingen** (edit it to
+change location/method — `config.example.json` is a generic template).
+
 ```bash
-# 1. Copy the example config and set your location
-cp prayer-times/config.example.json prayer-times/config.json
-#    edit latitude, longitude, timezone, method…
+# 1. (optional) edit prayer-times/config.json — latitude, longitude, method…
 
 # 2. See today's times in your terminal
 node prayer-times/cli.js today
@@ -44,7 +45,7 @@ No `npm install` is needed — the tool uses only the Node.js standard library
 
 ## Configuration
 
-`config.json` (copy from `config.example.json`):
+`config.json` (already present, pre-filled for Vlaardingen):
 
 | Field | Meaning |
 | --- | --- |
@@ -96,6 +97,39 @@ compare with your local table and switch the rule if needed.
 
 All commands accept `--config <file>` and the field overrides shown above.
 
+## Automatic feed on Apple devices (GitHub Pages)
+
+The included workflow `.github/workflows/prayer-times.yml` regenerates the feed
+daily and publishes it to GitHub Pages, so your iPhone, iPad and Mac all share
+one always-current subscription via iCloud. One-time setup on your fork:
+
+1. **Enable Actions** — repo *Settings → Actions → General* → allow workflows.
+2. **Enable Pages** — repo *Settings → Pages* → *Source: GitHub Actions*.
+3. **Get the workflow onto `main`** — the feed deploys from the default branch.
+   Merge this branch, then *Actions → Prayer Times Feed → Run workflow* to
+   publish immediately (it also runs daily on its own afterwards).
+4. Your feed is then at
+   `https://<your-user>.github.io/<repo>/prayer-times.ics`
+   with a friendly landing page at `https://<your-user>.github.io/<repo>/`.
+
+Subscribe once (see below) and every device stays current — new days roll in
+and daylight-saving shifts are handled automatically.
+
+> The Pages URL is public, so anyone with the link can see the schedule (which
+> reveals the configured city). Keep the repo/feed private-by-obscurity only, or
+> use the private import route instead if that matters to you.
+
+### Subscribe on Apple devices
+
+- **iPhone / iPad:** *Settings → Calendar → Accounts → Add Account → Other →
+  Add Subscribed Calendar* → paste the feed URL. It syncs to iCloud and shows on
+  your other devices too.
+- **Mac (Calendar app):** *File → New Calendar Subscription…* → paste the feed
+  URL → choose your iCloud account so it syncs everywhere; set *Auto-refresh*
+  to Daily.
+- The landing page's **Subscribe** button uses `webcal://`, which opens Apple
+  Calendar directly.
+
 ## Adding it to your calendar
 
 **Google Calendar (subscribe — auto-updates):** host the `serve` feed at a URL
@@ -137,7 +171,12 @@ lib/dates.js         calendar-tuple date math + ICS timestamp formatting
 lib/ics.js           RFC 5545 iCalendar writer (folding, escaping, VALARM)
 lib/generate.js      config -> full calendar / one-day table
 cli.js               today / generate / serve / methods
+pages/index.html     landing/subscribe page served on GitHub Pages
+config.json          your settings (pre-filled for Vlaardingen)
 ```
+
+The GitHub Action in `.github/workflows/prayer-times.yml` runs `generate` daily
+and deploys `pages/index.html` + `prayer-times.ics` to GitHub Pages.
 
 Times are returned as UTC instants on purpose: a prayer tracks the true sun, an
 absolute moment, so a UTC event renders at the right local wall-clock time in

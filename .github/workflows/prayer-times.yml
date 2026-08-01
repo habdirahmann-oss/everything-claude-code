@@ -1,0 +1,62 @@
+name: Prayer Times Feed
+
+# Regenerates prayer-times/config.json into a rolling 1-year iCalendar feed and
+# publishes it to GitHub Pages, so Apple/Google/Outlook calendars can subscribe
+# to a single always-current URL.
+
+on:
+  schedule:
+    - cron: '0 2 * * *' # daily at 02:00 UTC — rolls the 1-year window forward
+  workflow_dispatch: {}
+  push:
+    branches: [main]
+    paths:
+      - 'prayer-times/**'
+      - '.github/workflows/prayer-times.yml'
+
+# Least privilege, plus the tokens GitHub Pages deployment needs.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Never run two Pages deployments at once.
+concurrency:
+  group: prayer-times-pages
+  cancel-in-progress: true
+
+jobs:
+  build-and-deploy:
+    name: Generate and publish the feed
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
+        with:
+          node-version: '20.x'
+
+      - name: Generate the iCalendar feed
+        run: |
+          mkdir -p public
+          cp prayer-times/pages/index.html public/index.html
+          node prayer-times/cli.js generate --out public/prayer-times.ics --quiet
+          echo "Generated $(grep -c 'BEGIN:VEVENT' public/prayer-times.ics) events."
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: public
+
+      - name: Deploy to GitHub Pages
+        id: deploy
+        uses: actions/deploy-pages@v4
